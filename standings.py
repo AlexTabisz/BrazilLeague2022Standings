@@ -3,24 +3,7 @@ import boto3
 import http.client
 import os
 
-def standings_format(standings_data):
-    league_name = standings_data['response'][0]['league']['name']
-    country = standings_data['response'][0]['league']['country']
-    season = standings_data['response'][0]['league']['season']
-    rank = standings_data['response'][0]['league']['standings'][0][0]['rank']
-    team_name = standings_data['response'][0]['league']['standings'][0][0]['team']['name']
-    points = standings_data['response'][0]['league']['standings'][0][0]['points']
 
-    output_data = f"""
-    League Name: {league_name}
-    Country: {country}
-    Season: {season}
-    Rank: {rank}
-    Team Name: {team_name}
-    Points: {points}
-    """
-
-    return output_data
 def lambda_handler(event, context):
     try:
         api_host = "v3.football.api-sports.io"
@@ -40,10 +23,27 @@ def lambda_handler(event, context):
         data = res.read().decode("utf-8")
 
         if res.status == 200:
+            standings_data = json.loads(data)
 
             try:
-                standings_data = json.loads(data)
-                standings_messages = [standings_format(entry) for entry in standings_data.get('response', [])]
+                league_name = standings_data['response'][0]['league']['name']
+                country = standings_data['response'][0]['league']['country']
+                season = standings_data['response'][0]['league']['season']
+                rank = standings_data['response'][0]['league']['standings'][0][0]['rank']
+                team_name = standings_data['response'][0]['league']['standings'][0][0]['team']['name']
+                points = standings_data['response'][0]['league']['standings'][0][0]['points']
+
+                output_data = f"""
+                League Name: {league_name}
+                Country: {country}
+                Season: {season}
+                Rank: {rank}
+                Team Name: {team_name}
+                Points: {points}
+                """
+
+                return output_data
+            
                 sns_client.publish(
                     TopicArn=sns_topic_arn,
                     Message= json.dumps(standings_messages)
