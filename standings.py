@@ -46,7 +46,7 @@ def lambda_handler(event, context):
             
                 sns_client.publish(
                     TopicArn=sns_topic_arn,
-                    Message= json.dumps(standings_messages)
+                    Message= json.dumps(output_data)
                 )
 
                 print("Message published to SNS successfully!")
