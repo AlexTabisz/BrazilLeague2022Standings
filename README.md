@@ -8,4 +8,9 @@ This project leverages AWS Lambda and SNS to deliver statistics on my favorite B
 
 By subscribing to the SNS topic, I receive timely updates and insights into Corinthians' performance in 2022.
 
+Cloud Architecture
+
+![image](https://github.com/user-attachments/assets/24b9a036-0358-4d85-b717-450bbfc5f5cf)
+
+
 
