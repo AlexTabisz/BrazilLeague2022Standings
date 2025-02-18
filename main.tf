@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "email_topic" {
-    name = "brasileirao-topic"
+    name = "brasileirao_topic"
 }
 
 data "aws_sns_topic" "my_sns_topic_data" {
