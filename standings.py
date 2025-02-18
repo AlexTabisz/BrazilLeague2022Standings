@@ -41,26 +41,20 @@ def lambda_handler(event, context):
                 Team Name: {team_name}
                 Points: {points}
                 """
+            except Exception as e:
+                print(f"Error fetching data from API: {e}")
+                return {"statusCode": 500, "body": "Error fetching data"}
 
-                return output_data
-            
+            try:
                 sns_client.publish(
                     TopicArn=sns_topic_arn,
-                    Message= json.dumps(output_data)
+                    Message=output_data
                 )
-
-                print("Message published to SNS successfully!")
-
-                return {
-                    'statusCode': 200,
-                    'body': json.dumps('API call and SNS publishing successful!')
-                }
             except Exception as e:
-                print(f"Error processing data or publishing to SNS: {str(e)}")
-                return {
-                    'statusCode': 500,
-                    'body': json.dumps(f"Error processing data or publishing to SNS: {str(e)}")
-                }
+                print(f"Error publishing to SNS: {e}")
+                return {"statusCode": 500, "body": "Error publishing to SNS"}
+            
+            return {"statusCode": 200, "body": "Data processed and sent to SNS"}
 
         else:
             print(f"API call failed with status code: {res.status}")
@@ -69,3 +63,5 @@ def lambda_handler(event, context):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return None
+            
+    
